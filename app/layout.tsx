@@ -8,8 +8,8 @@ import Providers from "@/components/providers/Providers";
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Jopify",
-  description: "monitor the jobs you are applying for",
+  title: "Jobify Dev",
+  description: "Job application tracking system for job hunters",
 };
 
 export default function RootLayout({
