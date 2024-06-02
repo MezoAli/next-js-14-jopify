@@ -1,4 +1,3 @@
-import Image from "next/image";
 import ToggleTheme from "./ToggleTheme";
 import { UserButton } from "@clerk/nextjs";
 import DropdownLinks from "./DropdownLinks";
