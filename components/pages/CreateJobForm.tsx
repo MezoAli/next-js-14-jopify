@@ -25,7 +25,6 @@ import {
 import { CreateAndEditJobType, FormSchema } from "@/lib/types";
 import { useMutation } from "@tanstack/react-query";
 import { createJob } from "@/lib/actions";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 export default function CreateJobForm() {
@@ -40,16 +39,9 @@ export default function CreateJobForm() {
       jobMode: "full-time",
     },
   });
-  const { userId } = useAuth();
-
-  if (!userId) {
-    router.push("/");
-  }
-
-  const clerkId = userId as string;
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: CreateAndEditJobType) => createJob(data, clerkId),
+    mutationFn: (data: CreateAndEditJobType) => createJob(data),
     onSuccess: (data) => {
       if (!data) {
         toast.error("something went wrong");
@@ -189,7 +181,7 @@ export default function CreateJobForm() {
             />
             <Button
               type="submit"
-              className="rounded-[10px] capitalize mt-auto"
+              className="rounded-[10px] capitalize self-end"
               disabled={isPending}
             >
               {isPending ? "creating" : "create job"}

@@ -27,3 +27,10 @@ export const FormSchema = z.object({
 });
 
 export type CreateAndEditJobType = z.infer<typeof FormSchema>;
+
+export type GetAllJobsType = {
+  search?: string;
+  jobStatus?: string;
+  page?: number;
+  limit?: number;
+};

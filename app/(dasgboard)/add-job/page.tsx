@@ -7,6 +7,7 @@ import {
 
 const AddJob = () => {
   const queryClient = new QueryClient();
+
   return (
     <div>
       <HydrationBoundary state={dehydrate(queryClient)}>

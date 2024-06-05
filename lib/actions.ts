@@ -1,28 +1,28 @@
 "use server";
 
-// import { auth } from "@clerk/nextjs/server";
-// import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import prisma from "./db";
-import { CreateAndEditJobType, JobType } from "./types";
+import { CreateAndEditJobType, GetAllJobsType, JobType } from "./types";
+import { Prisma } from "@prisma/client";
 
-// export const authenticateAndRedirect = () => {
-//   const { userId }: { userId: string | null } = auth();
-//   if (!userId) {
-//     redirect("/");
-//   }
-//   return userId;
-// };
+export const authenticateAndRedirect = async () => {
+  const { userId }: { userId: string | null } = auth();
+  if (!userId) {
+    redirect("/");
+  }
+  return userId;
+};
 
 export const createJob = async (
-  data: CreateAndEditJobType,
-  clerkId: string
+  data: CreateAndEditJobType
 ): Promise<JobType | null> => {
-  //   const userId = authenticateAndRedirect();
+  const userId = await authenticateAndRedirect();
 
   try {
     const job: JobType = await prisma.job.create({
       data: {
-        clerkId,
+        clerkId: userId,
         ...data,
       },
     });
@@ -30,5 +30,58 @@ export const createJob = async (
   } catch (error) {
     console.log(error);
     return null;
+  }
+};
+
+export const getAllJobs = async ({
+  jobStatus,
+  page = 1,
+  search,
+  limit = 10,
+}: GetAllJobsType): Promise<{
+  jobs: JobType[];
+  count: number;
+  page: number;
+  totalPages: number;
+}> => {
+  try {
+    const userId = await authenticateAndRedirect();
+    let whereClause: Prisma.JobWhereInput = {
+      clerkId: userId,
+    };
+    if (search) {
+      whereClause = {
+        ...whereClause,
+        OR: [
+          {
+            position: {
+              contains: search,
+            },
+          },
+          {
+            company: {
+              contains: search,
+            },
+          },
+        ],
+      };
+    }
+    if (jobStatus && jobStatus !== "all") {
+      whereClause = {
+        ...whereClause,
+        jobStatus,
+      };
+    }
+
+    const jobs: JobType[] = await prisma.job.findMany({
+      where: whereClause,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return { jobs, count: jobs.length, page: 1, totalPages: 0 };
+  } catch (error) {
+    console.log(error);
+    return { jobs: [], count: 0, page: 1, totalPages: 0 };
   }
 };
