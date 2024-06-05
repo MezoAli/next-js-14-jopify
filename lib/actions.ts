@@ -56,11 +56,13 @@ export const getAllJobs = async ({
           {
             position: {
               contains: search,
+              mode: "insensitive",
             },
           },
           {
             company: {
               contains: search,
+              mode: "insensitive",
             },
           },
         ],
@@ -69,7 +71,10 @@ export const getAllJobs = async ({
     if (jobStatus && jobStatus !== "all") {
       whereClause = {
         ...whereClause,
-        jobStatus,
+        jobStatus: {
+          contains: jobStatus,
+          mode: "insensitive",
+        },
       };
     }
 

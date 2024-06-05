@@ -1,5 +1,6 @@
 import JobsList from "@/components/pages/JobsList";
 import SearchJobForm from "@/components/pages/SearchJobForm";
+import { getAllJobs } from "@/lib/actions";
 import {
   HydrationBoundary,
   QueryClient,
@@ -8,6 +9,11 @@ import {
 
 const JobsPage = async () => {
   const queryClient = new QueryClient();
+
+  queryClient.prefetchQuery({
+    queryKey: ["jobs"],
+    queryFn: () => getAllJobs({}),
+  });
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <SearchJobForm />
