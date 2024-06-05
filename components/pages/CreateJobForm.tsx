@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,23 +22,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-
-const FormSchema = z.object({
-  position: z.string().min(10, {
-    message: "Position must be at least 10 characters.",
-  }),
-  company: z.string().min(3, {
-    message: "Company must be at least 3 characters.",
-  }),
-  location: z.string().min(3, {
-    message: "Location must be at least 3 characters.",
-  }),
-  jobStatus: z.enum(["pending", "rejected", "interview"]),
-  jobMode: z.enum(["full-time", "part-time", "intership"]),
-});
+import { CreateAndEditJobType, FormSchema } from "@/lib/types";
+import { useMutation } from "@tanstack/react-query";
+import { createJob } from "@/lib/actions";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function CreateJobForm() {
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const router = useRouter();
+  const form = useForm<CreateAndEditJobType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       position: "",
@@ -49,17 +40,30 @@ export default function CreateJobForm() {
       jobMode: "full-time",
     },
   });
+  const { userId } = useAuth();
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast.success({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
-    toast.success(JSON.stringify(data, null, 2));
+  if (!userId) {
+    router.push("/");
+  }
+
+  const clerkId = userId as string;
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: CreateAndEditJobType) => createJob(data, clerkId),
+    onSuccess: (data) => {
+      if (!data) {
+        toast.error("something went wrong");
+        return;
+      }
+      toast.success("Job Created Successfully");
+      router.push("/jobs");
+    },
+  });
+
+  //   console.log(userId);
+
+  function onSubmit(data: CreateAndEditJobType) {
+    mutate(data);
   }
 
   return (
@@ -183,8 +187,12 @@ export default function CreateJobForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="rounded-[10px] capitalize mt-auto">
-              create job
+            <Button
+              type="submit"
+              className="rounded-[10px] capitalize mt-auto"
+              disabled={isPending}
+            >
+              {isPending ? "creating" : "create job"}
             </Button>
           </div>
         </form>
