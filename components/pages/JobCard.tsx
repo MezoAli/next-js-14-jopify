@@ -13,28 +13,30 @@ const JobCard = ({ job }: { job?: JobType }) => {
   return (
     <Card className="bg-muted rounded-[8px]">
       <CardHeader>
-        <CardTitle className="capitalize">backend developer</CardTitle>
-        <CardDescription className="capitalize">Assiut</CardDescription>
+        <CardTitle className="capitalize">{job?.position}</CardTitle>
+        <CardDescription className="capitalize">{job?.company}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center my-4">
           <div className="flex justify-center items-center gap-2">
             <Briefcase />
-            <p className="capitalize">full-time</p>
+            <p className="capitalize">{job?.jobMode}</p>
           </div>
           <div className="flex justify-center items-center gap-2">
             <MapPin />
-            <p className="capitalize">full-time</p>
+            <p className="capitalize">{job?.location}</p>
           </div>
         </div>
         <div className="flex justify-between items-center my-4">
           <div className="flex justify-center items-center gap-2">
             <CalendarDays />
-            <p className="capitalize">{new Date().toLocaleDateString()}</p>
+            <p className="capitalize">
+              {new Date(job?.createdAt as Date).toLocaleDateString()}
+            </p>
           </div>
           <Button className="flex justify-center items-center gap-2 rounded-[15px]">
             <RadioTower />
-            interview
+            {job?.jobStatus}
           </Button>
         </div>
       </CardContent>
