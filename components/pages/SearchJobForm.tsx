@@ -17,13 +17,13 @@ const SearchJobForm = () => {
         placeholder="Search Job"
         className="w-full rounded-[5px]"
       />
-      <Select defaultValue="pending">
+      <Select defaultValue="all">
         <SelectTrigger className="w-full rounded-[5px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {["pending", "rejected", "interview"].map((item) => {
+            {["all", "pending", "rejected", "interview"].map((item) => {
               return (
                 <SelectItem key={item} value={item}>
                   {item}
