@@ -104,3 +104,20 @@ export const deleteJob = async (jobId: string) => {
     return null;
   }
 };
+
+export const editJob = async (data: CreateAndEditJobType, jobId: string) => {
+  const clerkId = await authenticateAndRedirect();
+  try {
+    const job = await prisma.job.update({
+      where: {
+        clerkId,
+        id: jobId,
+      },
+      data: data,
+    });
+    return job;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

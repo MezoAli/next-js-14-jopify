@@ -25,6 +25,7 @@ import {
 import { CreateAndEditJobType, FormSchema, JobType } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { editJob } from "@/lib/actions";
 
 export default function EditJobForm({ job }: { job: JobType }) {
   const router = useRouter();
@@ -39,8 +40,23 @@ export default function EditJobForm({ job }: { job: JobType }) {
       jobMode: job.jobMode as "full-time" | "part-time" | "intership",
     },
   });
+  const jobId = job.id;
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: CreateAndEditJobType) => editJob(data, jobId),
+    onSuccess: (data) => {
+      if (!data) {
+        toast.error("something went wrong");
+        return;
+      }
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      toast.success("Job Updated Successfully");
+      router.push("/jobs");
+    },
+  });
 
-  const onSubmit = async (data: CreateAndEditJobType) => {};
+  const onSubmit = async (data: CreateAndEditJobType) => {
+    mutate(data);
+  };
 
   return (
     <div className="max-w-5xl mx-auto mt-16 bg-muted p-7 rounded-[5px]">
@@ -166,10 +182,9 @@ export default function EditJobForm({ job }: { job: JobType }) {
             <Button
               type="submit"
               className="rounded-[10px] capitalize self-end"
-              //   disabled={isPending}
+              disabled={isPending}
             >
-              {/* {isPending ? "creating" : "create job"} */}
-              Update Job
+              {isPending ? "Updating..." : "Update Job"}
             </Button>
           </div>
         </form>
