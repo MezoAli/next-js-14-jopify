@@ -23,12 +23,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import { CreateAndEditJobType, FormSchema } from "@/lib/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createJob } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 
 export default function CreateJobForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const form = useForm<CreateAndEditJobType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -47,12 +48,11 @@ export default function CreateJobForm() {
         toast.error("something went wrong");
         return;
       }
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
       toast.success("Job Created Successfully");
       router.push("/jobs");
     },
   });
-
-  //   console.log(userId);
 
   function onSubmit(data: CreateAndEditJobType) {
     mutate(data);

@@ -10,11 +10,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const SearchJobForm = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("search") || "";
+  const jobStatus = searchParams.get("jobStatus") || "all";
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,8 +26,8 @@ const SearchJobForm = () => {
     const formData = new FormData(e.currentTarget);
     const search = formData.get("search") as string;
     const jobStatus = formData.get("jobStatus") as string;
-    params.set("search", search);
-    params.set("jobStatus", jobStatus);
+    params.set("search", search ?? "");
+    params.set("jobStatus", jobStatus ?? "");
     router.push(`${pathname}?search=${search}&jobStatus=${jobStatus}`);
   };
 
@@ -37,8 +41,9 @@ const SearchJobForm = () => {
         placeholder="Search Job"
         className="w-full rounded-[5px]"
         name="search"
+        defaultValue={search}
       />
-      <Select defaultValue="all" name="jobStatus">
+      <Select defaultValue={jobStatus} name="jobStatus">
         <SelectTrigger className="w-full rounded-[5px]">
           <SelectValue />
         </SelectTrigger>

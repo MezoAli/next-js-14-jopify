@@ -10,7 +10,7 @@ import {
 const JobsPage = async () => {
   const queryClient = new QueryClient();
 
-  queryClient.prefetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: ["jobs"],
     queryFn: () => getAllJobs({}),
   });
