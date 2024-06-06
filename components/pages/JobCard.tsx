@@ -10,6 +10,7 @@ import {
 import { Button } from "../ui/button";
 import { JobType } from "@/lib/types";
 import DeleteJobForm from "./DeleteJobForm";
+import Link from "next/link";
 
 const JobCard = ({ job }: { job?: JobType }) => {
   return (
@@ -43,7 +44,9 @@ const JobCard = ({ job }: { job?: JobType }) => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-start gap-4">
-        <Button className="rounded-[5px]">Edit</Button>
+        <Button className="rounded-[5px]" asChild>
+          <Link href={`/jobs/${job?.id}`}>Edit</Link>
+        </Button>
         <DeleteJobForm jobId={job?.id as string} />
       </CardFooter>
     </Card>
