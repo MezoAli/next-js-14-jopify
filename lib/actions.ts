@@ -90,3 +90,17 @@ export const getAllJobs = async ({
     return { jobs: [], count: 0, page: 1, totalPages: 0 };
   }
 };
+
+export const deleteJob = async (jobId: string) => {
+  try {
+    await prisma.job.delete({
+      where: {
+        id: jobId,
+      },
+    });
+    return { message: true };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};

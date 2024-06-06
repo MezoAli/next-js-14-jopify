@@ -1,0 +1,34 @@
+"use client";
+import { FormEvent } from "react";
+import { Button } from "../ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteJob } from "@/lib/actions";
+import toast from "react-hot-toast";
+
+const DeleteJobForm = ({ jobId }: { jobId: string }) => {
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => deleteJob(jobId),
+    onSuccess: (data) => {
+      if (!data) {
+        toast.error("something went wrong");
+        return;
+      }
+      toast.success("Job Deleted Successfully");
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
+    },
+  });
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate();
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <Button className="rounded-[5px] capitalize" disabled={isPending}>
+        {isPending ? "please wait..." : "Delete"}
+      </Button>
+    </form>
+  );
+};
+
+export default DeleteJobForm;

@@ -9,6 +9,8 @@ import {
 } from "../ui/card";
 import { Button } from "../ui/button";
 import { JobType } from "@/lib/types";
+import DeleteJobForm from "./DeleteJobForm";
+
 const JobCard = ({ job }: { job?: JobType }) => {
   return (
     <Card className="bg-muted rounded-[8px]">
@@ -42,7 +44,7 @@ const JobCard = ({ job }: { job?: JobType }) => {
       </CardContent>
       <CardFooter className="flex justify-start gap-4">
         <Button className="rounded-[5px]">Edit</Button>
-        <Button className="rounded-[5px]">Delete</Button>
+        <DeleteJobForm jobId={job?.id as string} />
       </CardFooter>
     </Card>
   );
