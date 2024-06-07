@@ -174,7 +174,7 @@ export const getJobsCharts = async () => {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
       by: ["createdAt"],
       _count: {
@@ -191,7 +191,12 @@ export const getJobsCharts = async () => {
       return acc;
     }, {} as Record<string, number>);
 
-    return formattedResult;
+    const resultArray = Object.keys(formattedResult).map((key) => {
+      const modKey = dayjs(key).format("MMM YY");
+      return { date: modKey, count: formattedResult[key] };
+    });
+
+    return resultArray;
   } catch (error) {
     console.log(error);
     return null;

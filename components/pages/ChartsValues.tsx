@@ -1,15 +1,42 @@
 "use client";
 import { getJobsCharts } from "@/lib/actions";
 import { useQuery } from "@tanstack/react-query";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const ChartsValues = () => {
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["charts"],
     queryFn: () => getJobsCharts(),
   });
-  console.log(data);
 
-  return <div className="w-full h-full">ChartsValues</div>;
+  if (isPending)
+    return <h2 className="text-xl font-medium text-center">Please wait...</h2>;
+  if (!data || data.length < 1) return null;
+
+  return (
+    <section className="mt-16">
+      <h1 className="text-4xl font-semibold text-center">
+        Monthly Applications
+      </h1>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={data} margin={{ top: 50 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis allowDecimals={false} />
+          <Tooltip />
+          <Bar dataKey="count" fill="#2563eb" barSize={50} />
+        </BarChart>
+      </ResponsiveContainer>
+    </section>
+  );
 };
 
 export default ChartsValues;
