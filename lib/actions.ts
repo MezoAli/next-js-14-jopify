@@ -92,10 +92,12 @@ export const getAllJobs = async ({
 };
 
 export const deleteJob = async (jobId: string) => {
+  const userId = await authenticateAndRedirect();
   try {
     await prisma.job.delete({
       where: {
         id: jobId,
+        clerkId: userId,
       },
     });
     return { message: true };

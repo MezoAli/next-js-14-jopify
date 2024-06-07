@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const DeleteJobForm = ({ jobId }: { jobId: string }) => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
-    mutationFn: () => deleteJob(jobId),
+    mutationFn: (jobId: string) => deleteJob(jobId),
     onSuccess: (data) => {
       if (!data) {
         toast.error("something went wrong");
@@ -20,7 +20,7 @@ const DeleteJobForm = ({ jobId }: { jobId: string }) => {
   });
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate();
+    mutate(jobId);
   };
   return (
     <form onSubmit={handleSubmit}>
