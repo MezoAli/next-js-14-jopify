@@ -1,6 +1,7 @@
 "use client";
 import { getJobsCharts } from "@/lib/actions";
 import { useQuery } from "@tanstack/react-query";
+
 const ChartsValues = () => {
   const { data } = useQuery({
     queryKey: ["charts"],
@@ -8,7 +9,7 @@ const ChartsValues = () => {
   });
   console.log(data);
 
-  return <div>ChartsValues</div>;
+  return <div className="w-full h-full">ChartsValues</div>;
 };
 
 export default ChartsValues;

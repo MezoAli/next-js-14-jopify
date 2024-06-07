@@ -49,6 +49,8 @@ export default function EditJobForm({ job }: { job: JobType }) {
         return;
       }
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
+      queryClient.invalidateQueries({ queryKey: ["charts"] });
       toast.success("Job Updated Successfully");
       router.push("/jobs");
     },

@@ -16,6 +16,8 @@ const DeleteJobForm = ({ jobId }: { jobId: string }) => {
       }
       toast.success("Job Deleted Successfully");
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
+      queryClient.invalidateQueries({ queryKey: ["charts"] });
     },
   });
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

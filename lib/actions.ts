@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import dayjs from "dayjs";
 import prisma from "./db";
 import {
   CreateAndEditJobType,
@@ -162,11 +163,15 @@ export const getJobStats = async () => {
 
 export const getJobsCharts = async () => {
   const userId = await authenticateAndRedirect();
+  const sixMonthAgo = dayjs().subtract(5, "month").toDate();
 
   try {
     const jobs = await prisma.job.groupBy({
       where: {
         clerkId: userId,
+        createdAt: {
+          gte: sixMonthAgo,
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -178,7 +183,7 @@ export const getJobsCharts = async () => {
     });
 
     const formattedResult = jobs.reduce((acc, curr) => {
-      const month = curr.createdAt.toISOString().slice(0, 7); // Extracts the "YYYY-MM" part of the date
+      const month = curr.createdAt.toISOString().slice(0, 7);
       if (!acc[month]) {
         acc[month] = 0;
       }

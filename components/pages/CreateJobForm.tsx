@@ -49,6 +49,8 @@ export default function CreateJobForm() {
         return;
       }
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
+      queryClient.invalidateQueries({ queryKey: ["charts"] });
       toast.success("Job Created Successfully");
       router.push("/jobs");
     },
