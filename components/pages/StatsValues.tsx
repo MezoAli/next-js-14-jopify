@@ -1,12 +1,23 @@
 "use client";
 import { getJobStats } from "@/lib/actions";
 import { useQuery } from "@tanstack/react-query";
+import { StatsLoadingCard } from "./StatsLoadingCard";
 
 const StatsValues = () => {
-  const { data } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["stats"],
     queryFn: () => getJobStats(),
   });
+
+  if (isPending) {
+    return (
+      <div className="my-10 grid lg:grid-cols-3 gap-4">
+        {Array.from({ length: 3 }).map((item: any) => {
+          return <StatsLoadingCard key={item} />;
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="my-10 grid lg:grid-cols-3 gap-4">

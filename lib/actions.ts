@@ -159,3 +159,36 @@ export const getJobStats = async () => {
     return null;
   }
 };
+
+export const getJobsCharts = async () => {
+  const userId = await authenticateAndRedirect();
+
+  try {
+    const jobs = await prisma.job.groupBy({
+      where: {
+        clerkId: userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      by: ["createdAt"],
+      _count: {
+        createdAt: true,
+      },
+    });
+
+    const formattedResult = jobs.reduce((acc, curr) => {
+      const month = curr.createdAt.toISOString().slice(0, 7); // Extracts the "YYYY-MM" part of the date
+      if (!acc[month]) {
+        acc[month] = 0;
+      }
+      acc[month] += curr._count.createdAt;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return formattedResult;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
