@@ -3,7 +3,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import prisma from "./db";
-import { CreateAndEditJobType, GetAllJobsType, JobType } from "./types";
+import {
+  CreateAndEditJobType,
+  GetAllJobsType,
+  JobStats,
+  JobType,
+} from "./types";
 import { Prisma } from "@prisma/client";
 
 export const authenticateAndRedirect = async () => {
@@ -118,6 +123,37 @@ export const editJob = async (data: CreateAndEditJobType, jobId: string) => {
       data: data,
     });
     return job;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export const getJobStats = async () => {
+  const userId = await authenticateAndRedirect();
+  try {
+    const stats = await prisma.job.groupBy({
+      where: {
+        clerkId: userId,
+      },
+      by: ["jobStatus"],
+      _count: {
+        jobStatus: true,
+      },
+    });
+
+    const statsObject: JobStats = stats.reduce((acc, curr) => {
+      acc[curr.jobStatus] = curr._count.jobStatus;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const defaultStats = {
+      pending: 0,
+      rejected: 0,
+      interview: 0,
+      ...statsObject,
+    };
+    return defaultStats;
   } catch (error) {
     console.log(error);
     return null;

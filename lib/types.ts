@@ -34,3 +34,9 @@ export type GetAllJobsType = {
   page?: number;
   limit?: number;
 };
+
+export type JobStats = {
+  rejected?: number;
+  pending?: number;
+  interview?: number;
+};
