@@ -154,10 +154,13 @@ export const getJobStats = async () => {
       },
     });
 
-    const statsObject: JobStats = stats.reduce((acc, curr) => {
-      acc[curr.jobStatus] = curr._count.jobStatus;
-      return acc;
-    }, {} as Record<string, number>);
+    const statsObject: JobStats = stats.reduce(
+      (acc: Record<string, number>, curr) => {
+        acc[curr.jobStatus] = curr._count.jobStatus;
+        return acc;
+      },
+      {}
+    );
 
     const defaultStats = {
       pending: 0,
@@ -193,14 +196,14 @@ export const getJobsCharts = async () => {
       },
     });
 
-    const formattedResult = jobs.reduce((acc, curr) => {
+    const formattedResult = jobs.reduce((acc: Record<string, number>, curr) => {
       const month = curr.createdAt.toISOString().slice(0, 7);
       if (!acc[month]) {
         acc[month] = 0;
       }
       acc[month] += curr._count.createdAt;
       return acc;
-    }, {} as Record<string, number>);
+    }, {});
 
     const resultArray = Object.keys(formattedResult).map((key) => {
       const modKey = dayjs(key).format("MMM YY");
