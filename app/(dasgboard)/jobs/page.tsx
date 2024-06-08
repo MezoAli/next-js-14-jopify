@@ -1,4 +1,5 @@
 import JobsList from "@/components/pages/JobsList";
+import Pagination from "@/components/pages/Pagination";
 import SearchJobForm from "@/components/pages/SearchJobForm";
 import { getAllJobs } from "@/lib/actions";
 import {
