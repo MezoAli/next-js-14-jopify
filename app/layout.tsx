@@ -8,7 +8,7 @@ import Providers from "@/components/providers/Providers";
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Jobify Dev",
+  title: "Jobify",
   description: "Job application tracking system for job hunters",
 };
 

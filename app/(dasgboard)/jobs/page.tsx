@@ -7,6 +7,12 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Jobify | Jobs page",
+  description: "Job application tracking system for job hunters",
+};
 
 const JobsPage = async () => {
   const queryClient = new QueryClient();
