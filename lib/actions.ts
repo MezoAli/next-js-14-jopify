@@ -10,7 +10,6 @@ import {
   JobStats,
   JobType,
 } from "./types";
-import { Prisma } from "@prisma/client";
 
 export const authenticateAndRedirect = async () => {
   const { userId }: { userId: string | null } = auth();
