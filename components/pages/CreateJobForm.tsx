@@ -62,7 +62,9 @@ export default function CreateJobForm() {
 
   return (
     <div className="max-w-5xl mx-auto mt-16 bg-muted p-7 rounded-[5px]">
-      <h2 className="text-4xl font-bold mb-6">Add Job</h2>
+      <h2 className="text-4xl font-bold mb-6" data-testid="title">
+        Add Job
+      </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid lg:grid-cols-3 gap-4 mb-8">
