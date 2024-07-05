@@ -1,5 +1,5 @@
 import CreateJobForm from "../components/pages/CreateJobForm";
-import { render, screen } from "@testing-library/react";
+import { findAllByRole, render, screen } from "@testing-library/react";
 import { expect, describe, test, vi } from "vitest";
 import userEvents from "@testing-library/user-event";
 
@@ -43,5 +43,12 @@ describe("testing createJobForm", () => {
     expect(paragrapghs[0].innerHTML).toBe(
       "Position must be at least 10 characters."
     );
+  });
+
+  test("testing input values when user type to it", async () => {
+    render(<CreateJobForm />);
+    const inputs = await screen.findAllByRole("textbox");
+    await userEvents.type(inputs[0], "key account manager");
+    expect(inputs[0]).toHaveValue("key account manager");
   });
 });
