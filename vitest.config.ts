@@ -6,11 +6,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": resolve(__dirname, ""), // Adjust 'src' to your actual source directory
+      "@": resolve(__dirname, ""),
     },
   },
   test: {
     environment: "jsdom",
-    setupFiles: "./vitest.setup.js",
   },
 });

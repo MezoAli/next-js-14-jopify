@@ -1,5 +1,5 @@
 import CreateJobForm from "../components/pages/CreateJobForm";
-import { findAllByRole, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { expect, describe, test, vi } from "vitest";
 import userEvents from "@testing-library/user-event";
 
@@ -49,6 +49,18 @@ describe("testing createJobForm", () => {
     render(<CreateJobForm />);
     const inputs = await screen.findAllByRole("textbox");
     await userEvents.type(inputs[0], "key account manager");
-    expect(inputs[0]).toHaveValue("key account manager");
+    expect(inputs[0].getAttribute("value")).toBe("key account manager");
+  });
+
+  test("testing when submit the form with correct data", async () => {
+    render(<CreateJobForm />);
+    const Btns = screen.getAllByRole("button");
+    const inputs = await screen.findAllByRole("textbox");
+    for (let input of inputs) {
+      await userEvents.type(input, "test data here");
+    }
+    await userEvents.click(Btns[1]);
+    const paragrapghs = screen.queryAllByRole("paragraph");
+    expect(paragrapghs).toHaveLength(0);
   });
 });
